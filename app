@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hit Factor Genie</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Aladin&display=swap');
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #2f2f2f;
+      color: #fff;
+      text-align: center;
+    }
+    .container {
+      max-width: 90%;
+      margin: auto;
+      background-color: #3b3b3b;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    h1 {
+      font-family: 'Aladin', cursive;
+      color: #1e90ff;
+      font-size: 3em;
+    }
+    h2, h3 {
+      color: #1e90ff;
+    }
+    input, button, select {
+      width: 80%;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #1e90ff;
+      color: white;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #187bcd;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      padding: 10px;
+      background: #34495e;
+      border-radius: 5px;
+      color: #ffbf00;
+      min-height: 50px;
+    }
+    .section {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #3b3b3b;
+      border-radius: 8px;
+    }
+    .footer {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #222;
+      border-radius: 8px;
+      font-size: 14px;
+      color: white;
+    }
+    .footer a {
+      color: lightgray;
+      text-decoration: underline;
+    }
+    .dark-mode {
+      background-color: #fff;
+      color: #000;
+    }
+    .dark-mode .container, .dark-mode .section, .dark-mode .footer {
+      background-color: #ddd;
+    }
+
+    /* Sleek Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 30px;
+      margin: 10px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #444;
+      transition: 0.4s;
+      border-radius: 30px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #1e90ff;
+    }
+    input:checked + .slider:before {
+      transform: translateX(30px);
+    }
+
+    /* Info Toggle Styling */
+    .info-toggle {
+      background: #555;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .info-content {
+      display: none;
+      margin-top: 10px;
+      background: #444;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hit Factor Genie 🧞‍♂️</h1>
+    <a href="https://usuckatshooting.com" target="_blank" style="color: lightgray;">Powered By USuckAtShooting</a><br>
+    
+    <!-- Dark Mode Toggle Switch -->
+    <label class="switch">
+      <input type="checkbox" id="toggleDarkMode">
+      <span class="slider"></span>
+    </label>
+
+    <input type="number" id="highHitFactor" placeholder="Current High Hit Factor">
+    <input type="number" id="roundCount" placeholder="Stage Round Count">
+    <button id="calculateBtn">Calculate</button>
+    <div id="result" class="result"></div>
+
+    <!-- HHF Info Toggle -->
+    <div class="info-toggle" onclick="toggleInfo()">▼ Learn More</div>
+    <div id="infoContent" class="info-content">
+  <p>HF Genie's Math follows Eric Grauffel's Method.</p>
+  <p>This tool helps you use the current High Hit Factor (HHF) to determine how many points you can afford to drop on a stage. With that insight, you can strategically decide where to push speed and where to play it safe — and in some scenarios, plan Charlies on tougher targets like partials, no shoots, and swingers.</p>
+  <p>How to find the HHF:<p>
+  <p>You can ask the Range Officer for the fastest time on that stage. By estimating the hits, you'll get a good sense of the HHF.</p>
+  <p>At major matches with scores posted from the previous day or live scoring updates, you'll have access to the HHF.</p>
+   </div>
+  </div>
+  
+  <div class="section">
+    <h2>Hit Factor Calculator</h2>
+    <input type="number" id="points" placeholder="Points">
+    <input type="number" id="time" placeholder="Time (sec)">
+    <button id="basicCalcBtn">Calculate</button>
+    <div id="basicResult" class="result"></div>
+  </div>
+  
+  <div class="section">
+    <h3>Advanced Hit Factor Calculator</h3>
+    <select id="scoring">
+      <option value="minor">Minor</option>
+      <option value="major">Major</option>
+    </select>
+    <input type="number" id="alpha" placeholder="Alphas">
+    <input type="number" id="charlie" placeholder="Charlies">
+    <input type="number" id="delta" placeholder="Deltas">
+    <input type="number" id="miss" placeholder="Misses">
+    <input type="number" id="penalty" placeholder="No Shoot / Penalties">
+    <input type="number" id="advTime" placeholder="Time (sec)">
+    <button id="advCalcBtn">Calculate</button>
+    <div id="advResult" class="result"></div>
+  </div>
+  
+  <div class="footer">
+    <p>HF Genie Math follows Eric Grauffel's Method</p>
+    <a href="https://usuckatshooting.com" target="_blank">USuckAtShooting.com</a><br>
+    <a href="https://instagram.com/wes.cronin" target="_blank">Wes Cronin</a><br>
+    <a href="https://instagram.com/usuckatshooting" target="_blank">USuckAtShooting</a><br>
+    <a href="https://www.youtube.com/usuckatshooting" target="_blank">YouTube</a><br>
+    <a href="https://usuckatshooting.bigcartel.com/" target="_blank">Support Me</a>
+  </div>
+  
+  <script>
+    // Dark Mode Toggle
+    document.getElementById("toggleDarkMode").addEventListener("change", function() {
+      document.body.classList.toggle("dark-mode");
+    });
+
+    // Hit Factor Calculator (General)
+    document.getElementById("calculateBtn").addEventListener("click", function() {
+      let highHitFactor = parseFloat(document.getElementById("highHitFactor").value) || 0;
+      let roundCount = parseInt(document.getElementById("roundCount").value) || 0;
+      
+      if (roundCount < 1) {
+        document.getElementById("result").innerHTML = "Please enter valid numbers.";
+        return;
+      }
+      
+      let makeupShotTime = (15 / highHitFactor).toFixed(2);
+      let charliesAllowed = Math.floor(roundCount * 0.20);
+      let deltasAllowed = Math.floor(roundCount * 0.05);
+      
+      document.getElementById("result").innerHTML = `
+        Allowed Charlies: <b>${charliesAllowed}</b><br>
+        Allowed Deltas: <b>${deltasAllowed}</b><br>
+        Make up a miss with an Alpha in less than: <b>${makeupShotTime} seconds</b>
+      `;
+    });
+
+    // Basic Hit Factor Calculator
+    document.getElementById("basicCalcBtn").addEventListener("click", function() {
+      let points = parseFloat(document.getElementById("points").value) || 0;
+      let time = parseFloat(document.getElementById("time").value) || 1;
+      document.getElementById("basicResult").innerHTML = `Hit Factor: <b>${(points / time).toFixed(2)}</b>`;
+    });
+
+    // Advanced Hit Factor Calculator
+    document.getElementById("advCalcBtn").addEventListener("click", function() {
+      let scoring = document.getElementById("scoring").value;
+      let alphaPoints = scoring === "major" ? 5 : 5;
+      let charliePoints = scoring === "major" ? 4 : 3;
+      let deltaPoints = scoring === "major" ? 2 : 1;
+      let alpha = parseInt(document.getElementById("alpha").value) || 0;
+      let charlie = parseInt(document.getElementById("charlie").value) || 0;
+      let delta = parseInt(document.getElementById("delta").value) || 0;
+      let miss = parseInt(document.getElementById("miss").value) || 0;
+      let penalty = parseInt(document.getElementById("penalty").value) || 0;
+      let advTime = parseFloat(document.getElementById("advTime").value) || 1;
+      let points = (alpha * alphaPoints) + (charlie * charliePoints) + (delta * deltaPoints) - (miss * 10) - (penalty * 10);
+      document.getElementById("advResult").innerHTML = `Hit Factor: <b>${(points / advTime).toFixed(2)}</b>`;
+    });
+
+    // Info Toggle for HHF
+    function toggleInfo() {
+      var info = document.getElementById("infoContent");
+      info.style.display = (info.style.display === "none" || info.style.display === "") ? "block" : "none";
+    }
+  </script>
+</body>
+</html>
